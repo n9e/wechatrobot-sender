@@ -55,16 +55,21 @@ func sendChat(message *dataobj.Message) {
 
 	count := len(message.Tos)
 	for i := 0; i < count; i++ {
+		to := strings.TrimSpace(message.Tos[i])
+		if to == "" {
+			continue
+		}
+
 		err := corp.Send(corp.Message{
-			ToUser:  message.Tos[i],
+			ToUser:  to,
 			MsgType: "text",
 			Text:    corp.Content{Content: content},
 		})
 
 		if err != nil {
-			logger.Infof("send to %s fail: %v", message.Tos[i], err)
+			logger.Infof("send to %s fail: %v", to, err)
 		} else {
-			logger.Infof("send to %s succ", message.Tos[i])
+			logger.Infof("send to %s succ", to)
 		}
 	}
 
